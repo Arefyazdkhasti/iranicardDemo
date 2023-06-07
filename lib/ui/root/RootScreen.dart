@@ -50,89 +50,108 @@ class _RootScreenState extends State<RootScreen> {
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
 
-    return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          body: IndexedStack(
-            index: selectedScreenIndex,
-            children: [
-              _navigator(
-                  _dashboardKey, dashboardIndex, const DashBoardScreen()),
-              _navigator(_categoryKey, categoryIndex,
-                  Center(child: Text("دسته بندی"))),
-              _navigator(
-                  _ordersKey, ordersIndex, Center(child: Text("سفارشات"))),
-              _navigator(
-                  _profileKey, profileIndex, Center(child: Text("پروفایل"))),
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            selectedLabelStyle:
-                themeData.textTheme.bodyMedium?.copyWith(fontSize: 14),
-            unselectedLabelStyle:
-                themeData.textTheme.bodyMedium?.copyWith(fontSize: 14),
-            items: [
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.home),
-                  label: 'داشبورد',
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: WillPopScope(
+          onWillPop: _onWillPop,
+          child: Scaffold(
+            body: Stack(
+              children: [
+                IndexedStack(
+                  index: selectedScreenIndex,
+                  children: [
+                    _navigator(
+                        _dashboardKey, dashboardIndex, const DashBoardScreen()),
+                    _navigator(_categoryKey, categoryIndex,
+                        const Center(child: Text("دسته بندی"))),
+                    _navigator(_ordersKey, ordersIndex,
+                        const Center(child: Text("سفارشات"))),
+                    _navigator(_profileKey, profileIndex,
+                        const Center(child: Text("پروفایل"))),
+                  ],
+                ),
+                Positioned(
+                  bottom: 12,
+                  left: 12,
+                  child: FloatingActionButton.extended(
+                    onPressed: () {
+                      // Your action here
+                    },
+                    backgroundColor: LightThemeColor.itemBackgroundColor,
+                    label: Text('پشتیبانی', style: themeData.textTheme.labelMedium?.copyWith(color: LightThemeColor.iconColos)),
+                    icon: const Icon(Icons.headphones, color: LightThemeColor.iconColos,),
+                  ),
+                ),
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedLabelStyle:
+                  themeData.textTheme.bodyMedium?.copyWith(fontSize: 14),
+              unselectedLabelStyle:
+                  themeData.textTheme.bodyMedium?.copyWith(fontSize: 14),
+              items: [
+                BottomNavigationBarItem(
+                    icon: const Icon(Icons.home),
+                    label: 'داشبورد',
+                    activeIcon: Container(
+                      width: 60,
+                      height: 35,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: LightThemeColor.itemBackgroundColor),
+                      child: const Icon(Icons.home),
+                    )),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.category),
+                  label: 'دسته بندی',
                   activeIcon: Container(
-                    width: 60,
-                    height: 35,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: LightThemeColor.itemBackgroundColor),
-                    child: const Icon(Icons.home),
-                  )),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.category),
-                label: 'دسته بندی',
-                activeIcon: Container(
-                    width: 60,
-                    height: 35,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: LightThemeColor.itemBackgroundColor),
-                    child: const Icon(Icons.category)),
-              ),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.list),
-                  label: 'سفارشات',
+                      width: 60,
+                      height: 35,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: LightThemeColor.itemBackgroundColor),
+                      child: const Icon(Icons.category)),
+                ),
+                BottomNavigationBarItem(
+                    icon: const Icon(Icons.list),
+                    label: 'سفارشات',
+                    activeIcon: Container(
+                      width: 60,
+                      height: 35,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: LightThemeColor.itemBackgroundColor),
+                      child: const Icon(Icons.list),
+                    )),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.person),
+                  label: 'پروفایل',
                   activeIcon: Container(
-                    width: 60,
-                    height: 35,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: LightThemeColor.itemBackgroundColor),
-                    child: const Icon(Icons.list),
-                  )),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.person),
-                label: 'پروفایل',
-                activeIcon: Container(
-                    width: 60,
-                    height: 35,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: LightThemeColor.itemBackgroundColor),
-                    child: const Icon(Icons.person)),
-              )
-            ],
-            currentIndex: selectedScreenIndex,
-            onTap: (selectedIndex) {
-              setState(() {
+                      width: 60,
+                      height: 35,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: LightThemeColor.itemBackgroundColor),
+                      child: const Icon(Icons.person)),
+                )
+              ],
+              currentIndex: selectedScreenIndex,
+              onTap: (selectedIndex) {
                 setState(() {
-                  _history.remove(selectedScreenIndex);
-                  _history.add(selectedScreenIndex);
-                  selectedScreenIndex = selectedIndex;
+                  setState(() {
+                    _history.remove(selectedScreenIndex);
+                    _history.add(selectedScreenIndex);
+                    selectedScreenIndex = selectedIndex;
+                  });
                 });
-              });
-            },
-            unselectedItemColor: Colors.black,
-            selectedItemColor: LightThemeColor.primaryColor,
-          ),
-        ));
+              },
+              unselectedItemColor: Colors.black,
+              selectedItemColor: LightThemeColor.primaryColor,
+            ),
+          )),
+    );
   }
 
   Widget _navigator(GlobalKey key, int index, Widget child) {

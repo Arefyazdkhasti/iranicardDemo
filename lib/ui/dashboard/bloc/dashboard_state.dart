@@ -19,11 +19,11 @@ class DashboardError extends DashboardState {
 
 class DashboardSucces extends DashboardState {
   final List<BannerEntity> banners;
-  final List<ItemEntity> bestSellingCards;
+  final List<ItemEntity> onlineShoppings;
   final List<ItemEntity> gameGiftCards;
 
   const DashboardSucces(
       {required this.banners,
-      required this.bestSellingCards,
+      required this.onlineShoppings,
       required this.gameGiftCards});
 }

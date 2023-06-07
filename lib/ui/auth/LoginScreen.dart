@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iranicard_demo/data/model/AuthInfo.dart';
+import 'package:iranicard_demo/data/repository/auth_repository.dart';
+import 'package:iranicard_demo/ui/root/RootScreen.dart';
 
 import '../LightThemeColor.dart';
-import '../dashboard/DashBoardScreen.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -27,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+    _phoneController.text = "09901876797";
+    _passwordController.text = "Aref1380@";
 
     return Theme(
       data: themeData.copyWith(
@@ -73,11 +76,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment
                       .stretch, // Set the crossAxisAlignment to Stretch
                   children: [
-                    TextField(
+                    TextFormField(
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                        label: Text('شماره موبایل', style: themeData.textTheme.bodyMedium),
+                        label: Text('شماره موبایل',
+                            style: themeData.textTheme.bodyMedium),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -85,7 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        label: Text('رمز عبور',style: themeData.textTheme.bodyMedium),
+                        label: Text('رمز عبور',
+                            style: themeData.textTheme.bodyMedium),
                         suffixIcon: GestureDetector(
                           onTap: _togglePasswordVisibility,
                           child: Icon(
@@ -105,19 +110,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             debugPrint("forget password clicked.");
                           },
                           child: Row(
-                            children:[
+                            children: [
                               const Icon(
                                 Icons.vpn_key,
                                 color: LightThemeColor.primaryColor,
                               ),
                               const SizedBox(width: 5),
-                              Text(
-                                'فراموشی رمز عبور',
-                                style: themeData.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: LightThemeColor.primaryColor,
-                                )
-                              ),
+                              Text('فراموشی رمز عبور',
+                                  style:
+                                      themeData.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: LightThemeColor.primaryColor,
+                                  )),
                             ],
                           ),
                         )
@@ -127,7 +131,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text('ساخت حساب کاربری جدید',
                         textAlign: TextAlign.right,
                         style: themeData.textTheme.bodyMedium?.copyWith(
-                             color: LightThemeColor.primaryColor, fontWeight: FontWeight.bold)),
+                            color: LightThemeColor.primaryColor,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -139,8 +144,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Use an Align widget to align the TextButton to the bottom-left of the screen
                 alignment: Alignment.bottomLeft,
                 child: InkWell(
-                  onTap: () {
-                    _navigateToHomeScreen();
+                  onTap: () async {
+                    AuthInfoEntity auth = await authRepository.login(
+                        _phoneController.text, _passwordController.text);
+                    if (auth.accessTocken == "Hi") {
+                      Fluttertoast.showToast(
+                          msg: "خوش آمدی ${auth.name}",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      _navigateToHomeScreen();
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -167,11 +184,9 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-  
+
   void _navigateToHomeScreen() {
-      Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const DashBoardScreen()
-                ));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => RootScreen()));
   }
 }

@@ -3,7 +3,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../common/utils.dart';
 import '../../data/model/BannerEntity.dart';
-import '../LightThemeColor.dart';
+import '../ui/LightThemeColor.dart';
 import 'ImageLoadingService.dart';
 
 class BannerSlider extends StatelessWidget {
@@ -21,7 +21,7 @@ class BannerSlider extends StatelessWidget {
           PageView.builder(
               controller: _pageController,
               itemCount: banners.length,
-              physics: dfaultScrollPhysics,
+              physics: defaultScrollPhysics,
               itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.only(left: 12, right: 12),
                     child: ImageLoadingService(

@@ -40,8 +40,10 @@ dependencies:
   flutter_bloc: ^8.1.3
   equatable: ^2.0.5
   dio: ^5.2.0
-
-
+  fluttertoast: ^8.2.2
+  shared_preferences: ^2.1.1
+  flutter_svg: ^2.0.5
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,7 +69,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/logo.png
-  #   - images/a_dot_ham.jpeg
+    - assets/svg/dashboardincome.svg
+    - assets/svg/dashboardcrypto.svg
+    - assets/svg/dashboardsites.svg
+    - assets/svg/dashboardshopping.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

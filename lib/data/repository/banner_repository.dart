@@ -2,6 +2,8 @@ import '../../common/http_client.dart';
 import '../dataSource/banner_data_source.dart';
 import '../model/BannerEntity.dart';
 
+
+
 final bannerRepository = BannerRepository(BannerRemoteDataSource(httpClient));
 
 abstract class IBannerRepository {

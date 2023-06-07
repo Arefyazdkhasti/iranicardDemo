@@ -1,12 +1,16 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:iranicard_demo/data/repository/banner_repository.dart';
+import 'package:iranicard_demo/data/repository/item_repository.dart';
+import 'package:iranicard_demo/ui/dashboard/bloc/dashboard_bloc.dart';
+import 'package:iranicard_demo/ui/seach/SearchScreen.dart';
 
 import '../../common/utils.dart';
-import '../../data/model/BannerEntity.dart';
 import '../../data/model/ItemEntity.dart';
+import '../../widgets/ImageLoadingService.dart';
+import '../../widgets/slider.dart';
 import '../LightThemeColor.dart';
-import '../widgets/ImageLoadingService.dart';
-import '../widgets/slider.dart';
 
 class DashBoardScreen extends StatelessWidget {
   const DashBoardScreen({super.key});
@@ -15,80 +19,62 @@ class DashBoardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
 
-    return Scaffold(
-      body: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (contect, index) {
-            switch (index) {
-              case 0:
-                return const ToolBar();
-              case 1:
-                List<BannerEntity> banners = [
-                  BannerEntity(
-                      id: 0,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300"),
-                  BannerEntity(
-                      id: 1,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300"),
-                  BannerEntity(
-                      id: 2,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300")
-                ];
-                return BannerSlider(banners: banners);
-              case 2:
-                return _Services();
-              case 3:
-                List<ItemEntity> itemsMostPopular = [
-                  ItemEntity(
-                      id: 0,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300",
-                      title: "گیفت کارت امازون",
-                      subtitle: "وبسایت"),
-                  ItemEntity(
-                      id: 2,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300",
-                      title: "گیفت کارت امازون",
-                      subtitle: "وبسایت"),
-                  ItemEntity(
-                      id: 3,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300",
-                      title: "گیفت کارت امازون",
-                      subtitle: "وبسایت"),
-                ];
-                return _HorizonatalItemList(
-                  themeData: themeData,
-                  title: "کارت های پرفروش",
-                  list: itemsMostPopular,
-                  isSpecial: true,
-                );
-              case 4:
-                List<ItemEntity> itemsGameGiftCards = [
-                  ItemEntity(
-                      id: 0,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300",
-                      title: "گیفت کارت امازون",
-                      subtitle: "وبسایت"),
-                  ItemEntity(
-                      id: 2,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300",
-                      title: "گیفت کارت امازون",
-                      subtitle: "وبسایت"),
-                  ItemEntity(
-                      id: 3,
-                      imageUrl: "https://picsum.photos/seed/picsum/200/300",
-                      title: "گیفت کارت امازون",
-                      subtitle: "وبسایت"),
-                ];
-                return _HorizonatalItemList(
-                  themeData: themeData,
-                  title: "گیفت کارت های بازی",
-                  list: itemsGameGiftCards,
-                  isSpecial: false,
-                );
-              default:
-                return Container();
-            }
-          }),
+    return BlocProvider(
+      create: (context) {
+        final bloc = DashboardBloc(
+            bannerRepository: bannerRepository, itemRepository: itemRepository);
+
+        bloc.add(DashboardStarted());
+        return bloc;
+      },
+      child: Scaffold(body:
+          BlocBuilder<DashboardBloc, DashboardState>(builder: (context, state) {
+        if (state is DashboardSucces) {
+          return ListView.builder(
+              physics: defaultScrollPhysics,
+              itemCount: 6,
+              itemBuilder: (contect, index) {
+                switch (index) {
+                  case 0:
+                    return const ToolBar();
+                  case 1:
+                    return BannerSlider(banners: state.banners);
+                  case 2:
+                    return const _Services();
+                  case 3:
+                    List<ItemEntity> itemsMostPopular = state.onlineShoppings;
+                    return _HorizonatalItemList(
+                      themeData: themeData,
+                      title: "کارت های پرفروش",
+                      list: itemsMostPopular,
+                      isSpecial: true,
+                    );
+                  case 4:
+                    List<ItemEntity> itemsGameGiftCards = state.gameGiftCards;
+                    return _HorizonatalItemList(
+                      themeData: themeData,
+                      title: "گیفت کارت های بازی",
+                      list: itemsGameGiftCards,
+                      isSpecial: false,
+                    );
+                  case 6:
+                    return const SizedBox(height: 24);
+                  default:
+                    return Container();
+                }
+              });
+        } else if (state is DashboardLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is DashboardError) {
+          return Center(
+              child: Text(state.exeption.message,
+                  style: themeData.textTheme.bodyMedium));
+        } else {
+          throw Exception("State Not Supported!");
+        }
+      })),
     );
   }
 }
@@ -103,50 +89,42 @@ class _Services extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: SizedBox(
-        height: 200,
+        height: 150,
         child: Row(
           children: [
             Expanded(
               child: Column(
                 children: [
                   Expanded(
-                    child: Container(
-                      color: Colors.blue,
-                      height: 75,
-                    ),
+                    child: SvgPicture.asset('assets/svg/dashboardincome.svg',
+                        semanticsLabel: 'Acme Logo'),
                   ),
                   const SizedBox(
-                    height: 12,
+                    height: 8,
                   ),
                   Expanded(
-                    child: Container(
-                      color: Colors.green,
-                      height: 75,
-                    ),
+                    child: SvgPicture.asset('assets/svg/dashboardshopping.svg',
+                        semanticsLabel: 'Acme Logo'),
                   ),
                 ],
               ),
             ),
             const SizedBox(
-              width: 12,
+              width: 8,
             ),
             Expanded(
               child: Column(
                 children: [
                   Expanded(
-                    child: Container(
-                      color: Colors.yellow,
-                      height: 75,
-                    ),
+                    child: SvgPicture.asset('assets/svg/dashboardsites.svg',
+                        semanticsLabel: 'Acme Logo'),
                   ),
                   const SizedBox(
-                    height: 12,
+                    height: 8,
                   ),
                   Expanded(
-                    child: Container(
-                      color: Colors.red,
-                      height: 75,
-                    ),
+                    child: SvgPicture.asset('assets/svg/dashboardcrypto.svg',
+                        semanticsLabel: 'Acme Logo'),
                   ),
                 ],
               ),
@@ -210,14 +188,14 @@ class _HorizonatalItemList extends StatelessWidget {
             height: 150,
             child: ListView.builder(
                 itemCount: list.length,
-                physics: dfaultScrollPhysics,
+                physics: defaultScrollPhysics,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(left: 8, right: 8),
                     child: Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 220,
                           height: 150,
                           child: ImageLoadingService(
@@ -229,27 +207,41 @@ class _HorizonatalItemList extends StatelessWidget {
                           right: 0,
                           bottom: 0,
                           child: Container(
-                            width: 200,
-                            height: 55,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
+                            width: 150,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
                                     bottomLeft: Radius.circular(8),
                                     bottomRight: Radius.circular(8)),
-                                color: Colors.amber),
+                                color: Colors.black.withOpacity(0.5)),
                           ),
                         ),
                         Positioned(
                           left: 0,
                           right: 8,
-                          bottom: 8,
+                          bottom: 4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(list[index].title),
-                              const SizedBox(
-                                height: 4,
+                              Text(
+                                list[index].title,
+                                maxLines: 1,
+                                style: themeData.textTheme.labelMedium
+                                    ?.copyWith(
+                                        color: Colors.white, fontSize: 14),
                               ),
-                              Text(list[index].subtitle),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                list[index].subtitle,
+                                maxLines: 1,
+                                style: themeData.textTheme.labelMedium
+                                    ?.copyWith(
+                                        color:
+                                            LightThemeColor.secondaryTextColor,
+                                        fontSize: 14),
+                              ),
                             ],
                           ),
                         )
@@ -282,25 +274,28 @@ class ToolBar extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: LightThemeColor.itemBackgroundColor),
-          child: Row(children: [
-            const SizedBox(
-              width: 4,
-            ),
-            const Icon(Icons.search, color: LightThemeColor.iconColos),
-            const SizedBox(
-              width: 8,
-            ),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'جست و جو در ایرانیکارت',
-                  hintStyle: themeData.textTheme.bodyMedium
+          child: InkWell(
+            onTap: () => {
+              Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(builder: (context) => const SearchScreen()))
+            },
+            child: Row(children: [
+              const SizedBox(
+                width: 4,
+              ),
+              const Icon(Icons.search, color: LightThemeColor.iconColos),
+              const SizedBox(
+                width: 8,
+              ),
+              Expanded(
+                child: Text(
+                  'جست و جو در ایرانیکارت',
+                  style: themeData.textTheme.bodyMedium
                       ?.copyWith(color: LightThemeColor.primaryTextColor),
-                  border: InputBorder.none,
                 ),
               ),
-            ),
-          ]),
+            ]),
+          ),
         )),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),

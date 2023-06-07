@@ -1,5 +1,5 @@
 class ItemEntity {
-  final int id;
+  final String id;
   final String imageUrl;
   final String title;
   final String subtitle;

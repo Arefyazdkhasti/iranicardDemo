@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
 
-const dfaultScrollPhysics = BouncingScrollPhysics();
+const defaultScrollPhysics = BouncingScrollPhysics();

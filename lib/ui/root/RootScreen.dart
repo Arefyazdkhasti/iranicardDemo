@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:iranicard_demo/data/repository/auth_repository.dart';
+import 'package:iranicard_demo/ui/auth/LoginScreen.dart';
 
 import '../LightThemeColor.dart';
 import '../dashboard/DashBoardScreen.dart';
-
+/* 
+This class is the main root screen of the app which implement BottomNavigation
+It Also Support stacked bottomnavigation like instagram application
+*/
 class RootScreen extends StatefulWidget {
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -66,8 +71,28 @@ class _RootScreenState extends State<RootScreen> {
                         const Center(child: Text("دسته بندی"))),
                     _navigator(_ordersKey, ordersIndex,
                         const Center(child: Text("سفارشات"))),
-                    _navigator(_profileKey, profileIndex,
-                        const Center(child: Text("پروفایل"))),
+                    _navigator(
+                        _profileKey,
+                        profileIndex,
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text("پروفایل"),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    authRepository.logout();
+                                    Navigator.of(context, rootNavigator: true)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LoginScreen()));
+                                  },
+                                  child: const Text('خروج از حساب کابری'))
+                            ],
+                          ),
+                        )),
                   ],
                 ),
                 Positioned(
@@ -78,8 +103,13 @@ class _RootScreenState extends State<RootScreen> {
                       // Your action here
                     },
                     backgroundColor: LightThemeColor.itemBackgroundColor,
-                    label: Text('پشتیبانی', style: themeData.textTheme.labelMedium?.copyWith(color: LightThemeColor.iconColos)),
-                    icon: const Icon(Icons.headphones, color: LightThemeColor.iconColos,),
+                    label: Text('پشتیبانی',
+                        style: themeData.textTheme.labelMedium
+                            ?.copyWith(color: LightThemeColor.iconColos)),
+                    icon: const Icon(
+                      Icons.headphones,
+                      color: LightThemeColor.iconColos,
+                    ),
                   ),
                 ),
               ],

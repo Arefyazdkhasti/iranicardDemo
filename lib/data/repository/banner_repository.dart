@@ -7,7 +7,7 @@ import '../model/BannerEntity.dart';
 final bannerRepository = BannerRepository(BannerRemoteDataSource(httpClient));
 
 abstract class IBannerRepository {
-  Future<List<BannerEntity>> getAll();
+  Future<List<BannerEntity>> getAll(String accessTocken);
 }
 
 class BannerRepository implements IBannerRepository {
@@ -16,5 +16,5 @@ class BannerRepository implements IBannerRepository {
   BannerRepository(this.dataSource);
 
   @override
-  Future<List<BannerEntity>> getAll() => dataSource.getAll();
+  Future<List<BannerEntity>> getAll(String accessTocken) => dataSource.getAll(accessTocken);
 }

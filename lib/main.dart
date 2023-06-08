@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:iranicard_demo/data/model/AuthInfo.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:iranicard_demo/data/repository/auth_repository.dart';
 import 'package:iranicard_demo/ui/LightThemeColor.dart';
 import 'package:iranicard_demo/ui/auth/LoginScreen.dart';
 import 'package:iranicard_demo/ui/root/RootScreen.dart';
 
-void main() {
+import 'common/search_response_adapter.dart';
+import 'data/model/AuthInfo.dart';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(SearchResponseAdapter());
   WidgetsFlutterBinding.ensureInitialized();
   authRepository.loadAuthInfo();
   runApp(const MyApp());
@@ -38,12 +44,14 @@ class MyApp extends StatelessWidget {
             onSecondary: Colors.white),
       ),
       debugShowCheckedModeBanner: false,
+      //listen to the valueNotifier in auth repository and decide where to go in the moment of launch
       home: ValueListenableBuilder<AuthInfoEntity?>(
         valueListenable: AuthRepository.authChangeNotifier,
         builder: (context, value, child) {
           bool isAuthenticated = value?.accessTocken != null;
           return Directionality(
-              textDirection: TextDirection.rtl, child: isAuthenticated ? RootScreen() : const LoginScreen());
+              textDirection: TextDirection.rtl,
+              child: isAuthenticated ? RootScreen() : const LoginScreen());
         },
       ),
     );

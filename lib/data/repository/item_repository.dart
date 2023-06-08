@@ -8,8 +8,8 @@ import '../dataSource/item_data_source.dart';
 final itemRepository = ItemRepository(ItemRemoteDataSource(httpClient));
 
 abstract class IItemRepository {
-  Future<List<ItemEntity>> getAllOnlineShopping();
-  Future<List<ItemEntity>> getAllGiftCards();
+  Future<List<ItemEntity>> getAllOnlineShopping(String accessTocken);
+  Future<List<ItemEntity>> getAllGiftCards(String accessTocken);
 }
 
 class ItemRepository implements IItemRepository {
@@ -18,7 +18,7 @@ class ItemRepository implements IItemRepository {
   ItemRepository(this.dataSource);
 
   @override
-  Future<List<ItemEntity>> getAllOnlineShopping() => dataSource.getAllOnlineShopping();
+  Future<List<ItemEntity>> getAllOnlineShopping(String accessTocken) => dataSource.getAllOnlineShopping(accessTocken);
   @override
-  Future<List<ItemEntity>> getAllGiftCards() => dataSource.getAllGiftCards();
+  Future<List<ItemEntity>> getAllGiftCards(String accessTocken) => dataSource.getAllGiftCards(accessTocken);
 }

@@ -11,6 +11,11 @@ class SearchStarted extends SearchEvent{
   
 }
 
+class ItemBookMarkStatusChanged extends SearchEvent{
+  final SearchResponse searchResponse;
+
+  const ItemBookMarkStatusChanged(this.searchResponse);
+}
 
 class SearchQueryChanged extends SearchEvent{
   final SearchQuery searchQuery;

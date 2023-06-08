@@ -8,8 +8,10 @@ import 'package:iranicard_demo/ui/seach/SearchScreen.dart';
 
 import '../../common/utils.dart';
 import '../../data/model/ItemEntity.dart';
+import '../../data/repository/auth_repository.dart';
 import '../../widgets/ImageLoadingService.dart';
 import '../../widgets/slider.dart';
+import '../../widgets/toolbar.dart';
 import '../LightThemeColor.dart';
 
 class DashBoardScreen extends StatelessWidget {
@@ -136,7 +138,7 @@ class _Services extends StatelessWidget {
   }
 }
 
-class _HorizonatalItemList extends StatelessWidget {
+class _HorizonatalItemList extends StatefulWidget {
   const _HorizonatalItemList(
       {super.key,
       required this.themeData,
@@ -148,6 +150,24 @@ class _HorizonatalItemList extends StatelessWidget {
   final String title;
   final List<ItemEntity> list;
   final bool isSpecial;
+
+  @override
+  State<_HorizonatalItemList> createState() => _HorizonatalItemListState();
+}
+
+class _HorizonatalItemListState extends State<_HorizonatalItemList> {
+  String accessTocken = '';
+
+  @override
+  void initState() {
+    super.initState();
+    authRepository.loadAuthInfo().then((result) {
+      setState(() {
+        accessTocken = result;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -159,17 +179,18 @@ class _HorizonatalItemList extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(title, style: themeData.textTheme.titleMedium),
+                  Text(widget.title,
+                      style: widget.themeData.textTheme.titleMedium),
                   const SizedBox(width: 8),
                   Container(
                       decoration: BoxDecoration(
                           color: LightThemeColor.itemBackgroundColor,
                           borderRadius: BorderRadius.circular(8)),
-                      child: isSpecial
+                      child: widget.isSpecial
                           ? Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Text("ویژه",
-                                  style: themeData.textTheme.bodyMedium
+                                  style: widget.themeData.textTheme.bodyMedium
                                       ?.copyWith(
                                           color: LightThemeColor.primaryColor)),
                             )
@@ -187,7 +208,7 @@ class _HorizonatalItemList extends StatelessWidget {
           SizedBox(
             height: 150,
             child: ListView.builder(
-                itemCount: list.length,
+                itemCount: widget.list.length,
                 physics: defaultScrollPhysics,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
@@ -199,8 +220,9 @@ class _HorizonatalItemList extends StatelessWidget {
                           width: 220,
                           height: 150,
                           child: ImageLoadingService(
-                              imageUrl: list[index].imageUrl,
-                              borderRadius: BorderRadius.circular(8)),
+                              imageUrl: widget.list[index].imageUrl,
+                              borderRadius: BorderRadius.circular(8),
+                              accessTocken: accessTocken,),
                         ),
                         Positioned(
                           left: 0,
@@ -224,9 +246,9 @@ class _HorizonatalItemList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                list[index].title,
+                                widget.list[index].title,
                                 maxLines: 1,
-                                style: themeData.textTheme.labelMedium
+                                style: widget.themeData.textTheme.labelMedium
                                     ?.copyWith(
                                         color: Colors.white, fontSize: 14),
                               ),
@@ -234,9 +256,9 @@ class _HorizonatalItemList extends StatelessWidget {
                                 height: 2,
                               ),
                               Text(
-                                list[index].subtitle,
+                                widget.list[index].subtitle,
                                 maxLines: 1,
-                                style: themeData.textTheme.labelMedium
+                                style: widget.themeData.textTheme.labelMedium
                                     ?.copyWith(
                                         color:
                                             LightThemeColor.secondaryTextColor,
@@ -252,75 +274,6 @@ class _HorizonatalItemList extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class ToolBar extends StatelessWidget {
-  const ToolBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(children: [
-        Expanded(
-            child: Container(
-          height: 55,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: LightThemeColor.itemBackgroundColor),
-          child: InkWell(
-            onTap: () => {
-              Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(builder: (context) => const SearchScreen()))
-            },
-            child: Row(children: [
-              const SizedBox(
-                width: 4,
-              ),
-              const Icon(Icons.search, color: LightThemeColor.iconColos),
-              const SizedBox(
-                width: 8,
-              ),
-              Expanded(
-                child: Text(
-                  'جست و جو در ایرانیکارت',
-                  style: themeData.textTheme.bodyMedium
-                      ?.copyWith(color: LightThemeColor.primaryTextColor),
-                ),
-              ),
-            ]),
-          ),
-        )),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Container(
-            height: 55,
-            width: 55,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: LightThemeColor.itemBackgroundColor),
-            child: const Icon(Icons.battery_charging_full,
-                color: LightThemeColor.iconColos),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 0),
-          child: Container(
-            height: 55,
-            width: 55,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: LightThemeColor.itemBackgroundColor),
-            child: const Icon(Icons.wallet, color: LightThemeColor.iconColos),
-          ),
-        ),
-      ]),
     );
   }
 }

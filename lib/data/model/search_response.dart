@@ -1,9 +1,12 @@
+import 'package:hive/hive.dart';
+
+@HiveType(typeId: 0)
 class SearchResponse {
-  final String id;
-  final String image;
-  final String name;
-  final String type;
-  bool isBookmarked;
+  @HiveField(0) final String id;
+  @HiveField(1) final String image;
+  @HiveField(2) final String name;
+  @HiveField(3) final String type;
+  @HiveField(4) bool isBookmarked;
 
   SearchResponse(
       {required this.id,

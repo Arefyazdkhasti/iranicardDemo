@@ -24,3 +24,8 @@ class SearchSuccess extends SearchState {
 
   const SearchSuccess({required this.results});
 }
+
+
+class BookMarkStatusChangeSuccess extends SearchState{
+  
+}

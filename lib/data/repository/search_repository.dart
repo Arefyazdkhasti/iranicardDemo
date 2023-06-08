@@ -8,7 +8,7 @@ import '../../common/http_client.dart';
 final searchRepository = SearchRepository(SearchRemoteDataSource(httpClient));
 
 abstract class ISearchRepository {
-  Future<List<SearchResponse>> getResult(SearchQuery searchQuery);
+  Future<List<SearchResponse>> getResult(SearchQuery searchQuery,String accessTocken);
 }
 
 class SearchRepository implements ISearchRepository {
@@ -17,5 +17,5 @@ class SearchRepository implements ISearchRepository {
   SearchRepository(this.dataSource);
 
   @override
-  Future<List<SearchResponse>> getResult(SearchQuery searchQuery) => dataSource.getResult(searchQuery);
+  Future<List<SearchResponse>> getResult(SearchQuery searchQuery,String accessTocken) => dataSource.getResult(searchQuery,accessTocken);
 }

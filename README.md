@@ -1,16 +1,38 @@
 # iranicard_demo
+A Sample Flutter Applicaion powered by iranicard API
 
-A new Flutter project.
+https://api.iranicard.ir/api/
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies & Architecture 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+#### Technologies
+* Flutter,Dart
+* [cached_network_image](https://pub.dev/packages/cached_network_image)- Image loading and Caching
+* [smooth_page_indicator](https://pub.dev/packages/smooth_page_indicator) - slider indicators
+* [dio](https://pub.dev/packages/dio) - Remote Requests
+* [hive_flutter](https://pub.dev/packages/hive_flutter)  - Local Database
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Architecture
+Block
+* [flutter_bloc](https://pub.dev/packages/flutter_bloc) - bloc for state management
+* [equatable](https://pub.dev/packages/equatable) - Simplify Equality Comparisons
+* 
+## Screenshots
+
+### DashBoard
+<p align = "left" >
+  <img width="750" height="250" src="images/dashboard.jpg">
+</p>
+
+### Authentication
+<p align = "left" >
+ <img width="750" height="250" src="images/auth.jpg">
+</p>
+
+
+### Authentication
+<p align = "left" >
+ <img width="750" height="250" src="images/search.jpg">
+</p>

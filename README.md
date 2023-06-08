@@ -23,16 +23,16 @@ Block
 
 ### DashBoard
 <p align = "left" >
-  <img src="images/dashboard.jpg" width="600" alt="Dashboard Screenshot">
+  <img src="images/dashboard.jpg" width="400" alt="Dashboard Screenshot">
 </p>
 
 ### Authentication
 <p align = "left" >
- <img width="250" height="750" src="images/auth.jpg">
+ <img src="images/auth.jpg" width="400" alt="Dashboard Screenshot">
 </p>
 
 
-### Authentication
+### Search
 <p align = "left" >
- <img width="250" height="750" src="images/search.jpg">
+ <img src="images/search.jpg" width="400" alt="Dashboard Screenshot">
 </p>

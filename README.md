@@ -23,7 +23,7 @@ Block
 
 ### DashBoard
 <p align = "left" >
-  <img width="250" height="750" src="images/dashboard.jpg">
+  <img src="images/dashboard.jpg" width="600" alt="Dashboard Screenshot">
 </p>
 
 ### Authentication
